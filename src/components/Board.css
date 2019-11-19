@@ -1,4 +1,11 @@
 #board {
+  display: inline-block;
+  vertical-align: middle;
   margin: 25px 10px 10px 10px;
   width: 275px;
+}
+
+#guesses {
+  display: inline-block;
+  vertical-align: middle;
 }

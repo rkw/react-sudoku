@@ -3,67 +3,92 @@ import Box from './Box'
 import Guess from './Guess'
 import './Board.css'
 
-class BoxDetail {
-  constructor(value, cell) {
-    this.value = value    //.. known value for cell
-    this.guess = 0        //.. users guess
-    this.cell = cell      //.. 0 to 80, going across
-    this.possible = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]   //.. possible values (it can never be 0)
-  }
-}
-
 class Board extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       data: this.props.data,
+      solveGame: this.props.solveGame,
       boxes: [],
       groups: [],
       showing: -1
     }
     this.guess = this.guess.bind(this)
-    this.setValue = this.setValue.bind(this)
-    this.setPossible = this.setPossible.bind(this)
-    this.getPossible = this.getPossible.bind(this)
+    this.reportStats = this.reportStats.bind(this)
   }
 
   guess(e) {
     let boxes = this.state.boxes
     boxes[this.state.showing].guess = e.target.value
     this.setState({ boxes: boxes, showing: -1 })
-  }
-
-  setValue(cell, value) {
-    if (value !== 0) {
-      let boxes = this.state.boxes
-      boxes[cell].value = value
-      boxes[cell].possible = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   //.. remove possible guesses once manually guessed
-      this.setState({ boxes: boxes })
-    }
-  }
-
-  setPossible(cell, pos) {
-    let boxes = this.state.boxes
-    var curr = boxes[cell].possible
-
-    for (var i in pos) {
-      curr[i] = curr[i] & pos[i]
-    }
-
-    if (curr.filter(Boolean).length === 1) {
-      boxes[cell].value = curr.indexOf(1)
-    } else {
-      boxes[cell].possible = curr
-    }
-
-    this.setState({ boxes: boxes })
+    this.reportStats()
   }
 
   getPossible(cell) {
     return this.state.boxes[cell].possible
   }
 
+  reportStats() {
+    let done = this.state.boxes.filter((box) => box.value > 0).length
+    let guessed = this.state.boxes.filter((box) => box.guess > 0).length
+    let remaining = 81 - done
+    this.props.statsHandler({ done, guessed, remaining })
+  }
+
+  static setPossible(box, poss) {
+    let curr = box.possible
+
+    for (let i = 0; i < poss.length; i++) {
+      curr[i] = curr[i] & poss[i]
+    }
+
+    if (curr.filter(Boolean).length === 1) {
+      box.value = curr.indexOf(1)
+      box.possible = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    } else {
+      box.possible = curr
+    }
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
+    let updatedState = null
+
+    // solve game if prompted
+    // BUG: if someone loads a new game and solves it in the same cycle
+    if (nextProps.solveGame !== prevState.solveGame) {
+      if (nextProps.solveGame) {
+        let groups = prevState.groups
+        let repeat = true
+
+        while (repeat) {
+          // repeat until no reductions are possible
+          repeat = false
+
+          // eslint-disable-next-line 
+          groups.forEach(group => {
+            let knowns = group.map((box) => box.value).filter(Boolean)
+            let poss = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+            for (let i in knowns) {
+              poss[knowns[i]] = 0;
+            }
+
+            group.forEach((box) => {
+              if (box.value === 0) {
+                Board.setPossible(box, poss)
+                if (box.value !== 0) repeat = true
+              }
+            })
+          })
+        }
+
+        updatedState = { groups: groups, solveGame: nextProps.solveGame, ...updatedState }
+      } else {
+
+        updatedState = { solveGame: nextProps.solveGame, ...updatedState}
+      }
+    }
+
     // reset state when new data is loaded
     if (nextProps.data !== prevState.data) {
       let boxes = []
@@ -91,7 +116,7 @@ class Board extends React.Component {
       // Indexes for vertical rows
       for (var i = 0; i < 9; i++) {
         let k = i
-        arr[i + 9] = [0 + k, 9 + k, 18 + k, 27 + k, 39 + k, 45 + k, 54 + k, 63 + k, 72 + k]
+        arr[i + 9] = [0 + k, 9 + k, 18 + k, 27 + k, 36 + k, 45 + k, 54 + k, 63 + k, 72 + k]
       }
 
       // Indexes for sections
@@ -119,10 +144,10 @@ class Board extends React.Component {
         }
       }
 
-      return { boxes: boxes, groups: groups, data: nextProps.data }
+      updatedState = { boxes: boxes, groups: groups, data: nextProps.data, ...updatedState }
     }
-    else
-      return null
+
+    return updatedState
   }
 
   render() {
@@ -145,13 +170,27 @@ class Board extends React.Component {
       </Guess>
     }
 
+    //bring in redux .. this.reportStats() 
+
     return (
-      <div id="board">
-        {boxes}
-        {showGuess}
+      <div>
+        <div id="board">{boxes}</div>
+        <div id="guesses">{showGuess}</div>
       </div>
     )
   }
 }
 
+class BoxDetail {
+  constructor(value, cell) {
+    this.value = value    //.. known value for cell
+    this.guess = 0        //.. users guess
+    this.cell = cell      //.. 0 to 80, going across
+    this.possible = (value === 0)
+      ? [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]    //.. value can never be zero
+      : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    //.. if a value is set, nothing is possible
+  }
+}
+
 export default Board;
+

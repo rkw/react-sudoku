@@ -12,12 +12,13 @@ class App extends React.Component {
       guessed: 0,
       remaining: 81,
       totalClicks: 0,
+      solveGame: false,
       started: false,
       difficulty: 2,
       data: []
     }
     this.startGame = this.startGame.bind(this)
-    this.solveGame = this.solveGame.bind(this)
+    this.updateStats = this.updateStats.bind(this)
   }
 
   startGame() {
@@ -50,11 +51,12 @@ class App extends React.Component {
     //     thisView.loadData(defData);
     //   }
     // });
-    this.setState({ started: true, totalMoves: 0, data: defData })
+    this.setState({ started: true, solveGame: false, totalClicks: 0, done: 0, guessed: 0, remaining: 81, data: defData })
   }
 
-  solveGame() {
-    alert('solved')
+  updateStats({done, guessed, remaining}) {
+    let totalClicks = this.state.totalClicks + 1
+    this.setState({done, guessed, remaining, totalClicks})
   }
 
   render() {
@@ -72,10 +74,10 @@ class App extends React.Component {
         <Controls difficulty={this.state.difficulty}
           startGameHandler={this.startGame}
           changeDiffcultyHandler={(e) => this.setState({ difficulty: e.value })}
-          solveGameHandler={this.solveGame}>
+          solveGameHandler={() => this.setState({ solveGame: true })}>
         </Controls>
 
-        <Board data={this.state.data}></Board>
+        <Board data={this.state.data} solveGame={this.state.solveGame} statsHandler={this.updateStats}></Board>
 
         <Stats started={this.state.started} done={this.state.done}
           guessed={this.state.guessed} remaining={this.state.remaining}>
