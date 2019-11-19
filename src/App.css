@@ -3,50 +3,22 @@ body {
 }
 
 #title {
-box-shadow: 1px 1px 5px #888;
-text-shadow: 0.1em 0.1em 0.2em black;
-border-radius: 3px;
-color: whitesmoke;
-background-color: #C3D9FF;
-padding: 0px 10px 0px 10px;
-margin: 10px;
-text-align: center;
+  box-shadow: 1px 1px 5px #888;
+  text-shadow: 0.1em 0.1em 0.2em black;
+  border-radius: 3px;
+  color: whitesmoke;
+  background-color: #C3D9FF;
+  padding: 0px 10px 0px 10px;
+  margin: 10px;
+  text-align: center;
 }
 
 #totalclicks {
-vertical-align: bottom;
-padding: 10px;
+  vertical-align: bottom;
+  padding: 10px;
 }
 
 .inline {
   display: inline-block;
 }
 
-ul.guesses {
-  position: absolute;
-  padding: 0px;
-  margin: 0px;
-}
-
-ul.guesses li {
-  display: inline-block;
-  background-color: white;
-  border: solid 2px #888;
-  padding: 5px;
-  margin: 2px;
-  box-shadow: 3px 3px 5px #888;
-border-radius: 10px;
-  cursor: pointer;
-}
-
-ul.guesses li:hover {
-  background-color: yellow;
-  font-weight: bold;
-}
-
-.gapRight {
-  margin-right: 10px;
-}
-.gapBottom {
-  margin-bottom: 10px;
-}

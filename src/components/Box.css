@@ -8,16 +8,20 @@
   margin: 0px;
   cursor: pointer;
 }
+
 .box.guessed {
   color: red; 
 }
+
 .box.done {
   color: #000;
   cursor: default;
 }
+
 .box.show {
   background-color: yellow;
 }
+
 .box span {
   font-size: 13pt;
   font-weight: bold;
@@ -28,6 +32,37 @@
   display: none;
   float: left;
 }
+
 .box.guessed span.guessed, .box.done span.done {
   display: block;
+}
+
+ul.guesses {
+  position: absolute;
+  padding: 0px;
+  margin: 0px;
+}
+
+ul.guesses li {
+  display: inline-block;
+  background-color: white;
+  border: solid 2px #888;
+  padding: 5px;
+  margin: 2px;
+  box-shadow: 3px 3px 5px #888;
+border-radius: 10px;
+  cursor: pointer;
+}
+
+ul.guesses li:hover {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+.gapRight {
+  margin-right: 10px;
+}
+
+.gapBottom {
+  margin-bottom: 10px;
 }

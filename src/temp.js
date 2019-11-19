@@ -1,58 +1,58 @@
 $(function() {
-    var ls = {
-        getItem: function(key) {
-            return JSON.parse(localStorage.getItem(key));
-    	},
+    // var ls = {
+    //     getItem: function(key) {
+    //         return JSON.parse(localStorage.getItem(key));
+    // 	},
 		
-		setItem: function(key,value) {
-			localStorage.setItem(key, JSON.stringify(value));
-		}
-	}
+	// 	setItem: function(key,value) {
+	// 		localStorage.setItem(key, JSON.stringify(value));
+	// 	}
+	// }
 	
-    window.Box = Backbone.Model.extend({
-        defaults: {
-            value: 0,                           //.. known value for cell
-            guess: 0,
-            cell: 0,                            //.. 0 to 80, going across
-            show: 0                             //.. boolean: pop up is open
-        },
+    // window.Box = Backbone.Model.extend({
+    //     defaults: {
+    //         value: 0,                           //.. known value for cell
+    //         guess: 0,
+    //         cell: 0,                            //.. 0 to 80, going across
+    //         show: 0                             //.. boolean: pop up is open
+    //     },
         
-        initialize: function() {
-            // This is purposely left out of defaults so that all instances
-            //.. of Box will not reference the same array
-            this.set({possible: [0,1,1,1,1,1,1,1,1,1]});
-        },
+    //     initialize: function() {
+    //         // This is purposely left out of defaults so that all instances
+    //         //.. of Box will not reference the same array
+    //         this.set({possible: [0,1,1,1,1,1,1,1,1,1]});
+    //     },
         
-        guess: function(i) {
-            this.set({guess: i, show: 0});
-        },
+    //     guess: function(i) {
+    //         this.set({guess: i, show: 0});
+    //     },
         
-        setValue: function(i) {
-            if (i != 0) {
-                this.set({value: i});
-                this.set({possible: [0,0,0,0,0,0,0,0,0,0]});
-            }
-        },
+    //     setValue: function(i) {
+    //         if (i != 0) {
+    //             this.set({value: i});
+    //             this.set({possible: [0,0,0,0,0,0,0,0,0,0]});
+    //         }
+    //     },
         
-        setPossible: function(poss) {
-            var curr = this.get('possible');
-            for (var i in poss) {
-                // EXTREMELY important that the change is made on the curr 
-                //.. array since poss is shared by the group
-                curr[i] = curr[i] & poss[i];
-            }
+    //     setPossible: function(poss) {
+    //         var curr = this.get('possible');
+    //         for (var i in poss) {
+    //             // EXTREMELY important that the change is made on the curr 
+    //             //.. array since poss is shared by the group
+    //             curr[i] = curr[i] & poss[i];
+    //         }
             
-            if (_.compact(curr).length==1) {
-                this.setValue(_.indexOf(curr,1));         
-            } else {
-                this.set({possible: curr});
-            }        
-        },
+    //         if (_.compact(curr).length==1) {
+    //             this.setValue(_.indexOf(curr,1));         
+    //         } else {
+    //             this.set({possible: curr});
+    //         }        
+    //     },
                 
-        getPossible: function() {
-            return this.get('possible');
-        }
-    });
+    //     getPossible: function() {
+    //         return this.get('possible');
+    //     }
+    // });
 		
 	window.BoxView = Backbone.View.extend({
 		tagName: 'div',
@@ -165,90 +165,90 @@ $(function() {
     });
 	
 	window.AppView = Backbone.View.extend({
-		el: $('#app'),
+		// el: $('#app'),
 		
-		statsTemplate: _.template($('#stats-template').html()),
+		// statsTemplate: _.template($('#stats-template').html()),
 		
-		totalMoves: 0,
+		// totalMoves: 0,
 		
-		events: {
-			'click #loginname': 'promptName',
-			'click #startgame': 'startGame',
-            'click #solvegame': 'solveGame',
-            'change #difficulty': 'startGame'
-		},
+		// events: {
+		// 	'click #loginname': 'promptName',
+		// 	'click #startgame': 'startGame',
+        //     'click #solvegame': 'solveGame',
+        //     'change #difficulty': 'startGame'
+		// },
 		
-		initialize: function() {
-			this.displayName();
-			this.$('#startgame').focus();
-            Boxes.bind('change:guess', _.bind(this.updateGuesses, this));
-            Boxes.bind('change:guess', _.bind(this.render, this));
-            Boxes.bind('change:value', _.bind(this.render, this));
-            Boxes.bind('change:value', _.bind(this.solveGame, this));
-			Boxes.bind('add', _.bind(this.addBox, this));
-		},
+		// initialize: function() {
+		// 	this.displayName();
+		// 	this.$('#startgame').focus();
+        //     Boxes.bind('change:guess', _.bind(this.updateGuesses, this));
+        //     Boxes.bind('change:guess', _.bind(this.render, this));
+        //     Boxes.bind('change:value', _.bind(this.render, this));
+        //     Boxes.bind('change:value', _.bind(this.solveGame, this));
+		// 	Boxes.bind('add', _.bind(this.addBox, this));
+		// },
 		
-		render: function() {
-			this.$('#stats').html(this.statsTemplate({
-                done: Boxes.done().length,
-				guessed: Boxes.guessed().length,
-				remaining: Boxes.remaining().length
-			}));
-			this.renderGuesses();
-		},
+		// render: function() {
+		// 	this.$('#stats').html(this.statsTemplate({
+        //         done: Boxes.done().length,
+		// 		guessed: Boxes.guessed().length,
+		// 		remaining: Boxes.remaining().length
+		// 	}));
+		// 	this.renderGuesses();
+		// },
 		
-		renderGuesses: function() {
-			this.$('#totalmoves').text('Total moves: ' + this.totalMoves);
-		},
+		// renderGuesses: function() {
+		// 	this.$('#totalmoves').text('Total moves: ' + this.totalMoves);
+		// },
 
-		updateGuesses: function() {
-			this.totalMoves++;
-			this.renderGuesses();
-		},
+		// updateGuesses: function() {
+		// 	this.totalMoves++;
+		// 	this.renderGuesses();
+		// },
 		
-		promptName: function() {
-			ls.setItem('loginname', 
-				(prompt("What is your name?") || '').trim() || ls.getItem('loginname')
-			);
-			this.displayName();	
-		},
+		// promptName: function() {
+		// 	ls.setItem('loginname', 
+		// 		(prompt("What is your name?") || '').trim() || ls.getItem('loginname')
+		// 	);
+		// 	this.displayName();	
+		// },
 		
-		displayName: function() {
-			$('#loginname').text(
-				ls.getItem('loginname') || '{Click to Enter Name}'
-			);
-		},
+		// displayName: function() {
+		// 	$('#loginname').text(
+		// 		ls.getItem('loginname') || '{Click to Enter Name}'
+		// 	);
+		// },
 		
-		startGame: function() {
-			this.$('#board').empty().hide();
-			this.totalMoves = 0;
-			Boxes.reset();
-			$('ul.guesses').remove();	//.. close all 'guess' popups
+		// startGame: function() {
+		// 	this.$('#board').empty().hide();
+		// 	this.totalMoves = 0;
+		// 	Boxes.reset();
+		// 	$('ul.guesses').remove();	//.. close all 'guess' popups
 
-            var defData = [	4,0,0,0,0,0,0,5,9,
-	                        3,0,0,0,5,0,6,0,4,
-	                        0,1,0,0,0,8,0,0,0,
-	                        7,0,0,8,0,3,0,6,0,
-	                        0,0,0,0,0,0,0,0,0,
-	                        0,5,0,9,0,4,0,0,7,
-	                        0,0,0,3,0,0,0,2,0,
-	                        2,0,6,0,8,0,0,0,3,
-	                        9,7,0,0,0,0,0,0,8];
+        //     var defData = [	4,0,0,0,0,0,0,5,9,
+	    //                     3,0,0,0,5,0,6,0,4,
+	    //                     0,1,0,0,0,8,0,0,0,
+	    //                     7,0,0,8,0,3,0,6,0,
+	    //                     0,0,0,0,0,0,0,0,0,
+	    //                     0,5,0,9,0,4,0,0,7,
+	    //                     0,0,0,3,0,0,0,2,0,
+	    //                     2,0,6,0,8,0,0,0,3,
+	    //                     9,7,0,0,0,0,0,0,8];
          
-         	var thisView = this;
-         	var content = $('<div></div>');
-         	var url = 'sudoku-data?level=' + $('#difficulty').val();
-           	content.load(url + ' #puzzle_grid', function(res, status, xmlReq) {
-           		if (status != 'error') {
-	       			var gamedata = content.find('input').map(function() {
-						return parseInt($(this).val() ||  0);
-					}).toArray();
-					thisView.loadData(gamedata);           			
-           		} else {
-           			thisView.loadData(defData);
-           		}
-       		});
-		},
+        //  	var thisView = this;
+        //  	var content = $('<div></div>');
+        //  	var url = 'sudoku-data?level=' + $('#difficulty').val();
+        //    	content.load(url + ' #puzzle_grid', function(res, status, xmlReq) {
+        //    		if (status != 'error') {
+	    //    			var gamedata = content.find('input').map(function() {
+		// 				return parseInt($(this).val() ||  0);
+		// 			}).toArray();
+		// 			thisView.loadData(gamedata);           			
+        //    		} else {
+        //    			thisView.loadData(defData);
+        //    		}
+       	// 	});
+		// },
         
         loadData: function(data) {
             // Set all 81 boxes
