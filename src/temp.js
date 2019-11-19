@@ -55,59 +55,59 @@ $(function() {
     // });
 		
 	window.BoxView = Backbone.View.extend({
-		tagName: 'div',
+		// tagName: 'div',
 		
-		className: 'inline',
+		// className: 'inline',
 		
-		template: _.template($('#box-template').html()),
+		// template: _.template($('#box-template').html()),
 
-        events: {
-			'click' : 'toggleShow'
-		},
+        // events: {
+		// 	'click' : 'toggleShow'
+		// },
 		
-		initialize: function() {
-    		this.model.bind('change', _.bind(this.render, this));
-    		this.model.bind('change:show', _.bind(this.renderShow, this));
-		},
+		// initialize: function() {
+    	// 	this.model.bind('change', _.bind(this.render, this));
+    	// 	this.model.bind('change:show', _.bind(this.renderShow, this));
+		// },
 		
-    	render: function() {
-			$(this.el).html(this.template(this.model.toJSON()));
-			return this;
-		},
+    	// render: function() {
+		// 	$(this.el).html(this.template(this.model.toJSON()));
+		// 	return this;
+		// },
 	        
 		renderShow: function(e) {
-            $('ul.guesses').remove();   //.. remove all open instances
+            // $('ul.guesses').remove();   //.. remove all open instances
 
-            if (this.model.get('show')) {
-                var pop = '<ul class="guesses">';
+            // if (this.model.get('show')) {
+            //     var pop = '<ul class="guesses">';
                 
-                var poss = this.model.getPossible();
-                for (var i in poss) {
-                    if (poss[i]) {
-                        pop += '<li value="' +i+ '">' +i+ '</li>';
-                    }
-                }
-                pop += '<li value="0">clear</li></ul>';
+            //     var poss = this.model.getPossible();
+            //     for (var i in poss) {
+            //         if (poss[i]) {
+            //             pop += '<li value="' +i+ '">' +i+ '</li>';
+            //         }
+            //     }
+            //     pop += '<li value="0">clear</li></ul>';
     
-                var divLoc = $(this.el).offset();
-                $(pop).filter('ul.guesses')
-                    .css({'top': divLoc.top - 25, 'left': divLoc.left + 25})
-                    .hide()
-                    .appendTo('body')
-                    .fadeIn(500);
+            //     var divLoc = $(this.el).offset();
+            //     $(pop).filter('ul.guesses')
+            //         .css({'top': divLoc.top - 25, 'left': divLoc.left + 25})
+            //         .hide()
+            //         .appendTo('body')
+            //         .fadeIn(500);
                     
-                // Bind click event to the model's guess() method,
-                //.. bind the scope of of guess() to the model,
-                //.. pass in the li item value
-                var thisView = this;
-                $('ul.guesses li').click(function() {
-                    _.bind(thisView.model.guess, thisView.model, $(this).val())();
-                });
-            }
+            //     // Bind click event to the model's guess() method,
+            //     //.. bind the scope of of guess() to the model,
+            //     //.. pass in the li item value
+            //     var thisView = this;
+            //     $('ul.guesses li').click(function() {
+            //         _.bind(thisView.model.guess, thisView.model, $(this).val())();
+            //     });
+            // }
 		},
         
         toggleShow: function() {
-            _.bind(Boxes.toggleShow, Boxes, this.model)();
+            // _.bind(Boxes.toggleShow, Boxes, this.model)();
         }	
 	});
 	
@@ -250,59 +250,59 @@ $(function() {
        	// 	});
 		// },
         
-        loadData: function(data) {
-            // Set all 81 boxes
-    		for (var i in data) {
-                var box = new Box({cell:i});
-                box.setValue(data[i]);
-				Boxes.add(box);
-			}
+        // loadData: function(data) {
+        //     // Set all 81 boxes
+    	// 	for (var i in data) {
+        //         var box = new Box({cell:i});
+        //         box.setValue(data[i]);
+		// 		Boxes.add(box);
+		// 	}
             
-            // Create 27 groups: 9 horizotal rows, 9 vertical rows, 9 sections
-            for (var i=0; i<27; i++) {
-                Groups[i] = new Group;
-            }
+        //     // Create 27 groups: 9 horizotal rows, 9 vertical rows, 9 sections
+        //     for (var i=0; i<27; i++) {
+        //         Groups[i] = new Group;
+        //     }
             
-            var arr = [];   //.. hold box indexes for the groups
+        //     var arr = [];   //.. hold box indexes for the groups
             
-            // Indexes for horizontal rows
-            for (var i=0; i<9; i++) {
-                arr[i] = _.range(i*9, (i*9)+9, 1);
-            }
+        //     // Indexes for horizontal rows
+        //     for (var i=0; i<9; i++) {
+        //         arr[i] = _.range(i*9, (i*9)+9, 1);
+        //     }
 
-            // Indexes for vertical rows
-            for (var i=0; i<9; i++) {
-                arr[i+9] = _.range(i, i+(9*9), 9);
-            }
+        //     // Indexes for vertical rows
+        //     for (var i=0; i<9; i++) {
+        //         arr[i+9] = _.range(i, i+(9*9), 9);
+        //     }
             
-            // Indexes for sections
-            for (var i=18; i<27; i++) {
-                arr[i] = [];
-            }
-            for (var i=0; i<3; i++) {
-                for (var j=0; j<3; j++) {
-                    arr[18].push( (0+j) + (i*9) );
-                    arr[19].push( (3+j) + (i*9) );
-                    arr[20].push( (6+j) + (i*9) );
-                    arr[21].push( (27+j) + (i*9) );
-                    arr[22].push( (30+j) + (i*9) );
-                    arr[23].push( (33+j) + (i*9) );
-                    arr[24].push( (54+j) + (i*9) );
-                    arr[25].push( (57+j) + (i*9) );
-                    arr[26].push( (60+j) + (i*9) );
-                }
-            }
+        //     // Indexes for sections
+        //     for (var i=18; i<27; i++) {
+        //         arr[i] = [];
+        //     }
+        //     for (var i=0; i<3; i++) {
+        //         for (var j=0; j<3; j++) {
+        //             arr[18].push( (0+j) + (i*9) );
+        //             arr[19].push( (3+j) + (i*9) );
+        //             arr[20].push( (6+j) + (i*9) );
+        //             arr[21].push( (27+j) + (i*9) );
+        //             arr[22].push( (30+j) + (i*9) );
+        //             arr[23].push( (33+j) + (i*9) );
+        //             arr[24].push( (54+j) + (i*9) );
+        //             arr[25].push( (57+j) + (i*9) );
+        //             arr[26].push( (60+j) + (i*9) );
+        //         }
+        //     }
 
-            // Add boxes to groups
-            for (var i in Groups) {
-                for (var j in arr[i]) {
-                    Groups[i].add(Boxes.at(arr[i][j]));
-                }
-            }
+        //     // Add boxes to groups
+        //     for (var i in Groups) {
+        //         for (var j in arr[i]) {
+        //             Groups[i].add(Boxes.at(arr[i][j]));
+        //         }
+        //     }
             
-    		this.render();
-    		this.$('#board').fadeIn(1500);
-        },
+    	// 	this.render();
+    	// 	this.$('#board').fadeIn(1500);
+        // },
         
         solveGame: function() {
             for (var i in Groups) {
@@ -311,8 +311,8 @@ $(function() {
         },
 		
 		addBox: function(box) {
-			var view = new BoxView({model: box});
-			$('#board').append(view.render().el);
+			// var view = new BoxView({model: box});
+			// $('#board').append(view.render().el);
 		},
 		
 		promptNewGame: function() {

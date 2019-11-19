@@ -1,12 +1,13 @@
-import React from 'react';
-import './Board.css';
+import React from 'react'
+import Box from './Box'
+import Guess from './Guess'
+import './Board.css'
 
 class BoxDetail {
   constructor(value, cell) {
     this.value = value    //.. known value for cell
     this.guess = 0        //.. users guess
     this.cell = cell      //.. 0 to 80, going across
-    this.show = false     //.. pop up is open
     this.possible = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]   //.. possible values (it can never be 0)
   }
 }
@@ -17,21 +18,25 @@ class Board extends React.Component {
     this.state = {
       data: this.props.data,
       boxes: [],
-      groups: []
+      groups: [],
+      showing: -1
     }
+    this.guess = this.guess.bind(this)
+    this.setValue = this.setValue.bind(this)
+    this.setPossible = this.setPossible.bind(this)
+    this.getPossible = this.getPossible.bind(this)
   }
 
-  guess(cell, i) {
+  guess(e) {
     let boxes = this.state.boxes
-    boxes[cell].guess = i
-    boxes[cell].show = 0
-    this.setState({ boxes: boxes })
+    boxes[this.state.showing].guess = e.target.value
+    this.setState({ boxes: boxes, showing: -1 })
   }
 
-  setValue(cell, i) {
-    if (i !== 0) {
+  setValue(cell, value) {
+    if (value !== 0) {
       let boxes = this.state.boxes
-      boxes[cell].value = i
+      boxes[cell].value = value
       boxes[cell].possible = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   //.. remove possible guesses once manually guessed
       this.setState({ boxes: boxes })
     }
@@ -121,8 +126,30 @@ class Board extends React.Component {
   }
 
   render() {
+    let boxes
+    if (this.state.boxes.length) {
+      boxes = this.state.boxes.map(({ cell, value, guess }) => {
+        // prevent click if a sure value already exists
+        let clickable = value ? null : (e) => this.setState({ showing: cell })
+
+        return <Box key={cell} value={value} guess={guess} cell={cell} showing={this.state.showing}
+          showGuessHandler={clickable}>
+        </Box>
+      })
+    }
+
+    let showGuess
+    if (this.state.showing > -1) {
+      showGuess = <Guess guessHandler={this.guess}
+        possible={this.state.boxes[this.state.showing].possible}>
+      </Guess>
+    }
+
     return (
-      <div id="board">{this.props.data.toString()}</div>
+      <div id="board">
+        {boxes}
+        {showGuess}
+      </div>
     )
   }
 }
