@@ -22,11 +22,7 @@ class App extends React.Component {
   }
 
   startGame() {
-    // this.$('#board').empty().hide();
-    // Boxes.reset();
-    // $('ul.guesses').remove();	//.. close all 'guess' popups
-
-    var defData = [
+    let data = [
       4, 0, 0, 0, 0, 0, 0, 5, 9,
       3, 0, 0, 0, 5, 0, 6, 0, 4,
       0, 1, 0, 0, 0, 8, 0, 0, 0,
@@ -38,25 +34,22 @@ class App extends React.Component {
       9, 7, 0, 0, 0, 0, 0, 0, 8
     ];
 
-    // var thisView = this;
-    // var content = $('<div></div>');
-    // var url = 'sudoku-data?level=' + $('#difficulty').val();
-    // content.load(url + ' #puzzle_grid', function (res, status, xmlReq) {
-    //   if (status != 'error') {
-    //     var gamedata = content.find('input').map(function () {
-    //       return parseInt($(this).val() || 0);
-    //     }).toArray();
-    //     thisView.loadData(gamedata);
-    //   } else {
-    //     thisView.loadData(defData);
-    //   }
-    // });
-    this.setState({ started: true, solveGame: false, totalClicks: 0, done: 0, guessed: 0, remaining: 81, data: defData })
+    fetch(`sudoku-data?level=${this.state.difficulty}`)
+      .then(res => res.json())
+      .then(
+        (result) => { data = result },
+        (error) => { console.log(error) }
+      )
+      .then(
+        () => {
+          this.setState({ started: true, solveGame: false, totalClicks: 0, done: 0, guessed: 0, remaining: 81, data: data })
+        }
+      )
   }
 
-  updateStats({done, guessed, remaining}) {
+  updateStats({ done, guessed, remaining }) {
     let totalClicks = this.state.totalClicks + 1
-    this.setState({done, guessed, remaining, totalClicks})
+    this.setState({ done, guessed, remaining, totalClicks })
   }
 
   render() {
