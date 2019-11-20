@@ -15,6 +15,7 @@ class Board extends React.Component {
     }
     this.guess = this.guess.bind(this)
     this.reportStats = this.reportStats.bind(this)
+    this.checkWin = this.checkWin.bind(this)
   }
 
   guess(e) {
@@ -22,6 +23,7 @@ class Board extends React.Component {
     boxes[this.state.showing].guess = e.target.value
     this.setState({ boxes: boxes, showing: -1 })
     this.reportStats()
+    this.checkWin()
   }
 
   getPossible(cell) {
@@ -33,6 +35,15 @@ class Board extends React.Component {
     let guessed = this.state.boxes.filter((box) => box.guess > 0).length
     let remaining = 81 - done
     this.props.statsHandler({ done, guessed, remaining })
+  }
+
+  checkWin() {
+    for (let i=0; i<this.state.groups.length; i++) {
+      let group = this.state.groups[i]
+      let values = new Set(group.map((box) => box.value || box.guess ).filter(Boolean))
+      if (values.size < 9) return false
+    }
+    this.props.winHandler()
   }
 
   static setPossible(box, poss) {
