@@ -56,8 +56,13 @@ function App() {
   }
 
   const gameWon = () => {
-    if (window.confirm(`Congratulations!\nYou solved it in ${stats.totalClicks} clicks.\n\nContinue to new game?`))
+    //HACK-1: using setTimeout to push to next event loop to allow page to render
+    //HACK-2: totalClicks will be 1 behind since it is frozen in this loop
+    //remove hacks when flux pattern implemented
+    window.setTimeout(() => {
+    if (window.confirm(`Congratulations!\nYou solved it in ${stats.totalClicks+1} clicks.\n\nContinue to new game?`))
       startGame()
+    }, 1)
   }
 
   let renderClicks
